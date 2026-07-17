@@ -1,0 +1,6 @@
+- Ensure you are learning the Gen AI concepts like AI Agents, Agentic AI, loop engineering, harness engineering, mcp, evals etc as part of this project?
+- Check if we can make use of any available service for Lego parts recognition? Or does it require to use any AI services like OCR or LLM or others.
+- Have  checks and balances for the cost of running these services.
+- Try to determine the type of the application, whether it is going to be a PWA, or an native mobile application, or any react application, and also the backend and individual dashboards for users and admin pages.
+- Ponder on how user management and Auth part is handled.
+- I came across websites/services like https://rebrickable.com/, https://brickit.app/, https://wobrick.com/, https://gobricks.net/, https://brickmonkey.app/,  among others, which either already do or support my earlier idea with Lego MOCs and alternative rebuilding. Is there anything that we can use from these services right away or off the shelf, or emulate them?
