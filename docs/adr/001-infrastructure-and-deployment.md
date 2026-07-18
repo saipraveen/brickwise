@@ -102,11 +102,13 @@ No Lambda handler code is written. The application code is 100% standard Express
 ```
 Push to main
     ├── Client changes (/client/**)
-    │       └── GitHub Actions → Build React → Deploy to Cloudflare Pages (wrangler)
+    │       └── GitHub Actions → Build React → Direct Upload to Cloudflare Pages (cloudflare/pages-action@v1)
     │
     └── Server changes (/server/**)
             └── GitHub Actions → Build Docker → Push to ECR → Update Lambda function
 ```
+
+Cloudflare Pages is configured as a **Direct Upload** project (not Git-connected). GitHub Actions owns the build process and pushes the built assets using the `cloudflare/pages-action@v1` action. This keeps all CI/CD logic in GitHub Actions rather than splitting between GitHub and Cloudflare's build system.
 
 ### Cold Start Mitigation
 

@@ -7,27 +7,27 @@ Incremental implementation of the LEGO MOC Builder PWA following a monorepo stru
 ## Tasks
 
 - [ ] 1. Set up external service accounts and credentials
-  - [~] 1.1 Sign up for Neon and create PostgreSQL database
+  - [x] 1.1 Sign up for Neon and create PostgreSQL database
     - **Manual step**: Go to neon.tech, sign up with email, create project "brickwise", choose region closest to Lambda (us-east-1)
     - Note the connection string (postgresql://user:pass@ep-xyz.us-east-2.aws.neon.tech/neondb)
     - _Requirements: 9.1, 9.2_
 
-  - [~] 1.2 Sign up for Rebrickable and generate API key
+  - [x] 1.2 Sign up for Rebrickable and generate API key
     - **Manual step**: Go to rebrickable.com, create account, navigate to profile settings, generate API key
     - _Requirements: 9.6_
 
-  - [~] 1.3 Create Cloudflare R2 bucket for image storage
+  - [x] 1.3 Create Cloudflare R2 bucket for image storage
     - **Manual step**: In Cloudflare dashboard, enable R2, create bucket "brickwise-scan-images", set lifecycle rule (auto-delete after 30 days)
     - Generate R2 API token (S3-compatible access key + secret)
     - _Requirements: Design (Image Storage)_
 
-  - [~] 1.4 Create Cloudflare Pages project
+  - [x] 1.4 Create Cloudflare Pages project
     - **Manual step**: In Cloudflare dashboard, go to Pages, create project connected to saipraveen/brickwise GitHub repo
     - Set build command: `cd client && pnpm run build`, output directory: `client/dist`
     - Configure custom domain: lego.oruganti.in (CNAME record)
     - _Requirements: ADR-001 (Frontend Hosting)_
 
-  - [~] 1.5 Create AWS ECR repository for backend Docker images
+  - [x] 1.5 Create AWS ECR repository for backend Docker images
     - Run `aws ecr create-repository --repository-name brickwise-api`
     - Note the repository URI for CI/CD pipeline
     - _Requirements: ADR-001 (Container Registry)_
