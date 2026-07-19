@@ -184,6 +184,9 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
       hasNextPage: page < totalPages,
       hasPreviousPage: page > 1,
     },
+    ...(paginatedData.length === 0 && {
+      message: "No MOC designs found matching your criteria.",
+    }),
   };
 
   res.status(200).json(response);

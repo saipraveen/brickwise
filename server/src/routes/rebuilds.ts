@@ -192,6 +192,10 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       data: rebuildResults,
       totalResults: rebuildResults.length,
+      ...(rebuildResults.length === 0 && {
+        message:
+          "No rebuild ideas meet the minimum coverage threshold. Try selecting additional sets to expand available bricks.",
+      }),
     });
   } catch (error: unknown) {
     const err = error as Error;

@@ -14,6 +14,8 @@ export interface ApiErrorResponse {
 export interface PaginatedResponse<T> {
   data: T[];
   pagination: PaginationMeta;
+  /** Informational message returned when the result set is empty */
+  message?: string;
 }
 
 /** Pagination metadata */
@@ -274,4 +276,6 @@ export interface SearchResults {
   collection?: PaginatedResponse<import('./inventory').SetEntry>;
   mocs?: PaginatedResponse<MocSummary>;
   rebuilds?: PaginatedResponse<RebuildIdeaSummary>;
+  /** Warning message when cached data is served because a remote source is unavailable */
+  cachedDataWarning?: string;
 }

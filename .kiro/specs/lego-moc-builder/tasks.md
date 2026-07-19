@@ -253,7 +253,7 @@ Incremental implementation of the LEGO MOC Builder PWA following a monorepo stru
     - Search by set number, name, or theme
     - _Requirements: 4.3_
 
-- [ ] 10. Implement part coverage and MOC discovery
+- [x] 10. Implement part coverage and MOC discovery
   - [x] 10.1 Implement part coverage calculator service
     - Create `server/src/services/partCoverage.ts`
     - Calculate coverage as matched part-color pairs / total required pairs * 100 (rounded)
@@ -287,57 +287,57 @@ Incremental implementation of the LEGO MOC Builder PWA following a monorepo stru
     - Support filters: theme, difficulty, min coverage (50-100%)
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6_
 
-  - [ ] 10.7 Implement "no results" messaging for MOCs and rebuilds
+  - [x] 10.7 Implement "no results" messaging for MOCs and rebuilds
     - Return appropriate messages when data source is unavailable
     - Return suggestions when no rebuild ideas meet threshold
     - _Requirements: 5.8, 6.6_
 
-- [ ] 11. Checkpoint - Ensure coverage, MOC, and rebuild tests pass
+- [x] 11. Checkpoint - Ensure coverage, MOC, and rebuild tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 12. Implement sharing and access control
-  - [ ] 12.1 Implement sharing service and invite endpoints
+- [x] 12. Implement sharing and access control
+  - [x] 12.1 Implement sharing service and invite endpoints
     - Create `server/src/routes/sharing.ts` with POST /api/sharing/invite, DELETE /api/sharing/revoke, GET /api/shared/:userId
     - Implement invite-only access (max 20 per share)
     - Implement share link generation accessible only to invited users
     - Allow choosing collection, inventory, or both
     - _Requirements: 8.2, 8.3, 8.7_
 
-  - [ ] 12.2 Implement shared content view and access enforcement
+  - [x] 12.2 Implement shared content view and access enforcement
     - Add middleware to verify invited user access on shared endpoints
     - Display shared sets (name, theme, status) and inventory counts by category
     - Deny access and return error for uninvited users
     - Implement revocation (immediate access denial)
     - _Requirements: 8.4, 8.5, 8.6_
 
-  - [ ]* 12.3 Write property test for access control membership
+  - [x]* 12.3 Write property test for access control membership
     - **Property 12: Access Control Membership**
     - **Validates: Requirements 8.3, 8.5, 8.6**
 
-- [ ] 13. Implement search and filtering
-  - [ ] 13.1 Implement cross-domain search endpoint
+- [x] 13. Implement search and filtering
+  - [x] 13.1 Implement cross-domain search endpoint
     - Create `server/src/routes/search.ts` with GET /api/search
     - Search across inventory, collection, MOCs, and rebuild ideas
     - Match by name, part number, set number, theme, or designer
     - Require minimum 2-character query
     - _Requirements: 10.1, 10.2_
 
-  - [ ] 13.2 Implement multi-filter AND logic and pagination
+  - [x] 13.2 Implement multi-filter AND logic and pagination
     - Combine multiple filters with AND logic
     - Cap results at 50 per domain with pagination
     - Serve cached data with warning when remote sources unavailable
     - _Requirements: 10.3, 10.4, 10.5, 10.6, 10.7_
 
-  - [ ]* 13.3 Write property test for cross-domain search with AND-logic filters
+  - [x]* 13.3 Write property test for cross-domain search with AND-logic filters
     - **Property 13: Cross-Domain Search with AND-Logic Filters**
     - **Validates: Requirements 10.1, 10.3**
 
-  - [ ]* 13.4 Write property test for result set pagination cap
+  - [x]* 13.4 Write property test for result set pagination cap
     - **Property 14: Result Set Pagination Cap**
     - **Validates: Requirements 10.7, 4.3, 5.1**
 
-- [ ] 14. Implement display inspiration
-  - [ ] 14.1 Implement display ideas endpoints
+- [x] 14. Implement display inspiration
+  - [x] 14.1 Implement display ideas endpoints
     - Create `server/src/routes/displayIdeas.ts` with GET /api/display-ideas, POST /api/display-ideas/favorites
     - Return at least 3 ideas matching build theme and scale
     - Support category filter (shelf, wall-mount, diorama, lighting, stand)
@@ -345,28 +345,28 @@ Incremental implementation of the LEGO MOC Builder PWA following a monorepo stru
     - Each idea includes reference image, description (20-300 chars), category, materials list
     - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
 
-- [ ] 15. Implement buy missing parts integration
-  - [ ] 15.1 Implement BrickLink and BrickOwl pricing clients
+- [x] 15. Implement buy missing parts integration
+  - [x] 15.1 Implement BrickLink and BrickOwl pricing clients
     - Create `server/src/services/marketplaceClient.ts`
     - Query BrickLink API for part pricing and availability
     - Query BrickOwl API for supplementary pricing
     - Generate BrickLink Wanted List XML export
     - _Requirements: 9.7, Design (Buy Missing Parts)_
 
-  - [ ] 15.2 Implement missing parts purchase endpoint
+  - [x] 15.2 Implement missing parts purchase endpoint
     - Add pricing lookup to missing parts response
     - Generate direct marketplace URLs
     - Generate Wobrick bulk order URL
     - _Requirements: Design (Buy Missing Parts)_
 
-- [ ] 16. Implement admin dashboard
-  - [ ] 16.1 Implement admin endpoints and role enforcement
+- [x] 16. Implement admin dashboard
+  - [x] 16.1 Implement admin endpoints and role enforcement
     - Create `server/src/routes/admin.ts` with stats, costs, sync-status, users, quotas, budget-threshold
     - Add admin role check middleware (first registered user is admin)
     - Return usage stats, cost breakdown, sync health, user activity
     - _Requirements: Design (Admin Dashboard)_
 
-- [ ] 17. Checkpoint - Ensure all server-side tests pass
+- [x] 17. Checkpoint - Ensure all server-side tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 18. Implement React client - core shell and offline support
