@@ -1,7 +1,7 @@
 import { type Router as RouterType, Router, type Request, type Response } from "express";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { db } from "../db/index.js";
-import { setCollection, brickInventory } from "../db/schema.js";
+import { setCollection, brickInventory, mocWishlist } from "../db/schema.js";
 import { authenticate } from "../middleware/auth.js";
 import { getRebrickableClient } from "../services/rebrickableClient.js";
 import { calculateCoverage } from "../services/partCoverage.js";
@@ -190,6 +190,110 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
   };
 
   res.status(200).json(response);
+});
+
+/**
+ * GET /api/mocs/wishlist
+ * Get user's saved MOC wishlist.
+ *
+ * Requirements: 5.7
+ */
+router.get("/wishlist", async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user!.userId;
+
+  const items = await db
+    .select()
+    .from(mocWishlist)
+    .where(eq(mocWishlist.userId, userId))
+    .orderBy(mocWishlist.savedAt);
+
+  const data: MocSummary[] = items.map((item) => ({
+    id: item.mocId,
+    title: item.title,
+    designer: item.designer,
+    thumbnailUrl: item.thumbnailUrl,
+    pieceCount: item.pieceCount,
+  }));
+
+  res.status(200).json({ data });
+});
+
+/**
+ * POST /api/mocs/wishlist
+ * Save a MOC to the user's wishlist (max 200).
+ *
+ * Requirements: 5.7
+ */
+router.post("/wishlist", async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user!.userId;
+  const { mocId, title, thumbnailUrl, designer, pieceCount } = req.body;
+
+  if (!mocId || !title || !designer) {
+    res.status(400).json({
+      error: "validation_error",
+      message: "mocId, title, and designer are required",
+      statusCode: 400,
+    });
+    return;
+  }
+
+  // Check limit (max 200)
+  const [countResult] = await db
+    .select({ count: sql<number>`count(*)::int`.as("count") })
+    .from(mocWishlist)
+    .where(eq(mocWishlist.userId, userId));
+
+  if ((countResult?.count ?? 0) >= 200) {
+    res.status(400).json({
+      error: "limit_exceeded",
+      message: "Wishlist is full (maximum 200 MOCs). Remove some before adding more.",
+      statusCode: 400,
+    });
+    return;
+  }
+
+  // Check if already saved
+  const existing = await db
+    .select({ id: mocWishlist.id })
+    .from(mocWishlist)
+    .where(and(eq(mocWishlist.userId, userId), eq(mocWishlist.mocId, mocId)));
+
+  if (existing.length > 0) {
+    res.status(409).json({
+      error: "duplicate",
+      message: "This MOC is already in your wishlist",
+      statusCode: 409,
+    });
+    return;
+  }
+
+  await db.insert(mocWishlist).values({
+    userId,
+    mocId,
+    title,
+    thumbnailUrl: thumbnailUrl ?? "",
+    designer,
+    pieceCount: pieceCount ?? 0,
+  });
+
+  res.status(201).json({ success: true, message: "MOC saved to wishlist" });
+});
+
+/**
+ * DELETE /api/mocs/wishlist/:mocId
+ * Remove a MOC from the user's wishlist.
+ *
+ * Requirements: 5.7
+ */
+router.delete("/wishlist/:mocId", async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user!.userId;
+  const mocId = req.params["mocId"] as string;
+
+  await db
+    .delete(mocWishlist)
+    .where(and(eq(mocWishlist.userId, userId), eq(mocWishlist.mocId, mocId)));
+
+  res.status(200).json({ success: true, message: "MOC removed from wishlist" });
 });
 
 /**

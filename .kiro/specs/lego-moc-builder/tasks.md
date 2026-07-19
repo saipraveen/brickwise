@@ -369,33 +369,33 @@ Incremental implementation of the LEGO MOC Builder PWA following a monorepo stru
 - [x] 17. Checkpoint - Ensure all server-side tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 18. Implement React client - core shell and offline support
-  - [ ] 18.1 Implement PWA shell with routing and navigation
+- [x] 18. Implement React client - core shell and offline support
+  - [x] 18.1 Implement PWA shell with routing and navigation
     - Set up React Router with routes for all major views
     - Create layout with persistent navigation and legal disclaimer link
     - Implement responsive mobile-first design
     - _Requirements: 11.1_
 
-  - [ ] 18.2 Implement Service Worker with offline caching strategy
+  - [x] 18.2 Implement Service Worker with offline caching strategy
     - Register Service Worker for asset caching
     - Implement cache-first strategy for catalog data
     - Implement network-first strategy for API calls with offline fallback
     - _Requirements: Design (Offline Strategy)_
 
-  - [ ] 18.3 Implement IndexedDB store with sync queue
+  - [x] 18.3 Implement IndexedDB store with sync queue
     - Create IndexedDB schema (inventory, sets, catalogParts, catalogSets, syncQueue, mocWishlist, displayFavorites)
     - Implement CRUD operations for each object store
     - Implement sync queue for offline writes (queue operations, replay on reconnect)
     - _Requirements: 9.8, Design (IndexedDB Schema)_
 
-- [ ] 19. Implement React client - camera and scanning UI
-  - [ ] 19.1 Implement camera module with MediaDevices API
+- [x] 19. Implement React client - camera and scanning UI
+  - [x] 19.1 Implement camera module with MediaDevices API
     - Create camera component with permission request flow
     - Handle permission denied state with settings navigation prompt
     - Implement image capture and base64 encoding
     - _Requirements: 1.1, 1.2_
 
-  - [ ] 19.2 Implement scan session UI with review step
+  - [x] 19.2 Implement scan session UI with review step
     - Create scan session view: capture, loading, results
     - Display identified bricks with confidence percentages
     - Flag low-confidence bricks (< 70%) with visual indicator
@@ -403,47 +403,47 @@ Incremental implementation of the LEGO MOC Builder PWA following a monorepo stru
     - Show error states (service unavailable, no bricks detected, timeout)
     - _Requirements: 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9_
 
-- [ ] 20. Implement React client - inventory and collection views
-  - [ ] 20.1 Implement inventory view with grouping and status breakdown
+- [x] 20. Implement React client - inventory and collection views
+  - [x] 20.1 Implement inventory view with grouping and status breakdown
     - Display bricks grouped by category/color/part number (user toggle)
     - Show total count and availability breakdown (available, in-use, in-storage)
     - Implement inline quantity edit and remove actions
     - _Requirements: 2.1, 2.2, 2.5, 2.6_
 
-  - [ ] 20.2 Implement set collection view with status management
+  - [x] 20.2 Implement set collection view with status management
     - Display sets with images, names, themes, build status
     - Implement mark as built/disassembled with conflict notification UI
     - Implement set search (up to 50 results), add, duplicate warning, remove with confirmation
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 2.3, 2.4, 2.7_
 
-  - [ ] 20.3 Implement storage bag management view
+  - [x] 20.3 Implement storage bag management view
     - Display bag overview (bag number, distinct types, total count)
     - Implement create bag, assign bricks to bag, remove from bag
     - Show brick location lookup (which bags contain a given brick)
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9_
 
-- [ ] 21. Implement React client - discovery and sharing views
-  - [ ] 21.1 Implement MOC discovery and wishlist UI
+- [x] 21. Implement React client - discovery and sharing views
+  - [x] 21.1 Implement MOC discovery and wishlist UI
     - Display paginated MOC list with thumbnails, titles, designers, piece counts
     - Implement buildability check with coverage percentage and missing parts
     - Implement wishlist save (max 200)
     - Sort by coverage when inventory loaded
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8_
 
-  - [ ] 21.2 Implement rebuild ideas and display inspiration UI
+  - [x] 21.2 Implement rebuild ideas and display inspiration UI
     - Show rebuild ideas for selected sets with coverage, difficulty
     - Implement filters (theme, difficulty, min coverage)
     - Show display ideas by category with images and descriptions
     - Implement display favorites (max 100)
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 7.1, 7.2, 7.3, 7.4, 7.5_
 
-  - [ ] 21.3 Implement sharing and invite management UI
+  - [x] 21.3 Implement sharing and invite management UI
     - Create share settings view with invite by username
     - Show current invitees with revoke option
     - Implement shared content viewer for invited users
     - _Requirements: 8.2, 8.3, 8.4, 8.5, 8.6, 8.7_
 
-  - [ ] 21.4 Implement search and filter UI
+  - [x] 21.4 Implement search and filter UI
     - Create global search bar (min 2 chars) with cross-domain results
     - Display results grouped by domain (Inventory, Collection, MOCs, Rebuilds)
     - Implement multi-filter controls with AND logic
@@ -451,23 +451,23 @@ Incremental implementation of the LEGO MOC Builder PWA following a monorepo stru
     - Show cached-data warning when remote unavailable
     - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7_
 
-- [ ] 22. Implement legal compliance and attribution
-  - [ ] 22.1 Add legal disclaimer and attribution components
+- [x] 22. Implement legal compliance and attribution
+  - [x] 22.1 Add legal disclaimer and attribution components
     - Create persistent "About"/"Legal" link visible from every screen
     - Display full disclaimer (not affiliated with LEGO Group) on About screen
     - Display Data_Provider attribution (name + link) on relevant screens and About page
     - Use "LEGO" in uppercase only, with trademark acknowledgment per screen
     - _Requirements: 11.1, 11.2, 11.3, 11.4_
 
-- [ ] 23. Implement client authentication flow
-  - [ ] 23.1 Implement login, registration, and token management in client
+- [x] 23. Implement client authentication flow
+  - [x] 23.1 Implement login, registration, and token management in client
     - Create registration form with validation feedback
     - Create login form with error handling
     - Store JWT in memory, refresh token in httpOnly cookie or secure storage
     - Auto-refresh on 401 responses
     - _Requirements: 8.1_
 
-- [ ] 24. Final checkpoint - End-to-end integration verification
+- [x] 24. Final checkpoint - End-to-end integration verification
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

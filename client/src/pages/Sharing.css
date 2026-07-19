@@ -1,0 +1,374 @@
+.sharing-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.sharing-page h2 {
+  margin-bottom: 0.25rem;
+}
+
+.sharing-description {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+/* View Toggle */
+.sharing-view-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.sharing-view-toggle .toggle-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.sharing-view-toggle .toggle-btn.active {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+
+.sharing-view-toggle .toggle-btn:hover:not(.active) {
+  border-color: #3b82f6;
+}
+
+/* Share Options */
+.share-options-section {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.share-options-section h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.share-toggles {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.share-toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.share-toggle-item label {
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* Invite Form */
+.invite-section {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.invite-section h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.invite-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.invite-form input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.invite-form input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.invite-btn {
+  padding: 0.5rem 1rem;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.invite-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.invite-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+/* Invitees List */
+.invitees-section {
+  margin-bottom: 1.5rem;
+}
+
+.invitees-section h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.invitees-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.invitee-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  background: #fff;
+}
+
+.invitee-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.invitee-username {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.invitee-meta {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.invitee-status {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.invitee-status.active {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.invitee-status.revoked {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.revoke-btn {
+  padding: 0.4rem 0.75rem;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.revoke-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.revoke-btn:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+/* Shared Content Viewer */
+.shared-viewer-section {
+  margin-bottom: 1.5rem;
+}
+
+.shared-viewer-section h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.shared-lookup-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.shared-lookup-form input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.shared-lookup-form input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.view-shared-btn {
+  padding: 0.5rem 1rem;
+  background: #10b981;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.view-shared-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.view-shared-btn:hover:not(:disabled) {
+  background: #059669;
+}
+
+.shared-content {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.shared-content h4 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.shared-collection h5,
+.shared-inventory h5 {
+  margin: 0.75rem 0 0.5rem;
+  font-size: 0.95rem;
+}
+
+.shared-sets-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.75rem;
+}
+
+.shared-set-item {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  margin-bottom: 0.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.shared-set-name {
+  font-weight: 500;
+}
+
+.shared-set-meta {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.shared-inventory-total {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.shared-category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.shared-category-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 0.85rem;
+}
+
+.shared-category-item:last-child {
+  border-bottom: none;
+}
+
+/* General utility styles */
+.sharing-page .loading-text {
+  color: #666;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.sharing-page .error-text {
+  color: #dc2626;
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+.sharing-page .action-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.sharing-page .action-error .dismiss-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #991b1b;
+  padding: 0 0.25rem;
+}
+
+.sharing-page .success-text {
+  color: #065f46;
+  background: #d1fae5;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.empty-invitees {
+  color: #666;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 1rem 0;
+}

@@ -26,7 +26,7 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
     .orderBy(storageBag.bagNumber);
 
   // For each bag, compute the overview stats from brick_inventory
-  const overviews: BagOverview[] = [];
+  const overviews: (BagOverview & { id: string })[] = [];
 
   for (const bag of bags) {
     const [stats] = await db
@@ -44,6 +44,7 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
       );
 
     overviews.push({
+      id: bag.id,
       bagNumber: bag.bagNumber,
       distinctBrickTypes: stats?.distinctTypes ?? 0,
       totalBrickCount: stats?.totalCount ?? 0,
@@ -111,6 +112,49 @@ router.get("/locate", async (req: Request, res: Response): Promise<void> => {
     }));
 
   res.status(200).json({ data: locations });
+});
+
+/**
+ * GET /api/bags/:id/bricks
+ * Returns all bricks stored in a specific bag.
+ */
+router.get("/:id/bricks", async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user!.userId;
+  const bagId = req.params["id"] as string;
+
+  // Verify bag belongs to user
+  const [bag] = await db
+    .select()
+    .from(storageBag)
+    .where(and(eq(storageBag.id, bagId), eq(storageBag.userId, userId)))
+    .limit(1);
+
+  if (!bag) {
+    res.status(404).json({
+      error: "not_found",
+      message: "Storage bag not found",
+      statusCode: 404,
+    });
+    return;
+  }
+
+  const bricks = await db
+    .select({
+      id: brickInventory.id,
+      partNumber: brickInventory.partNumber,
+      colorId: brickInventory.colorId,
+      quantity: brickInventory.quantity,
+    })
+    .from(brickInventory)
+    .where(
+      and(
+        eq(brickInventory.userId, userId),
+        eq(brickInventory.bagNumber, bag.bagNumber),
+        eq(brickInventory.status, "in-storage"),
+      ),
+    );
+
+  res.status(200).json({ data: bricks });
 });
 
 /**

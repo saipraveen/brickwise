@@ -1,0 +1,376 @@
+/* Bags Page Styles */
+
+.bags-page {
+  max-width: 100%;
+}
+
+.bags-description {
+  color: #666;
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+}
+
+/* Brick Location Lookup */
+.bags-lookup-section {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+}
+
+.bags-lookup-section h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.lookup-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.lookup-row input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.lookup-row input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.lookup-btn {
+  padding: 0.5rem 1rem;
+  background: #1a1a2e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.lookup-btn:hover:not(:disabled) {
+  background: #2d2d4e;
+}
+
+.lookup-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.lookup-error {
+  color: #991b1b;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.lookup-results {
+  margin-top: 0.75rem;
+}
+
+.lookup-empty {
+  color: #666;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+.lookup-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.lookup-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+}
+
+.lookup-bag-number {
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.lookup-quantity {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Bags Header */
+.bags-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.bags-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.create-bag-btn {
+  padding: 0.5rem 1rem;
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.create-bag-btn:hover:not(:disabled) {
+  background: #16a34a;
+}
+
+.create-bag-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Bag Cards */
+.bags-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bag-card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.bag-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.bag-card-header:hover {
+  background: #f8f9fa;
+}
+
+.bag-number {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1a1a2e;
+  min-width: 4.5rem;
+}
+
+.bag-stats {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+}
+
+.bag-stat {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.bag-expand-icon {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+/* Bag Card Body (expanded) */
+.bag-card-body {
+  border-top: 1px solid #e9ecef;
+  padding: 1rem;
+}
+
+.bag-bricks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.bag-brick-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.brick-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.brick-part {
+  font-weight: 600;
+  color: #1a1a2e;
+  font-size: 0.9rem;
+}
+
+.brick-color {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.brick-qty {
+  font-size: 0.8rem;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Assign Form */
+.assign-form {
+  padding-top: 0.75rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.assign-form h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.assign-fields {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.assign-fields input {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.assign-fields input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.assign-fields input[type="text"] {
+  flex: 2;
+  min-width: 100px;
+}
+
+.assign-fields input[type="number"] {
+  flex: 1;
+  min-width: 70px;
+}
+
+.assign-btn {
+  padding: 0.4rem 0.8rem;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.assign-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.assign-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Reuse common styles */
+.bags-page .action-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #991b1b;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.bags-page .dismiss-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #991b1b;
+  padding: 0 0.25rem;
+}
+
+.bags-page .loading-text {
+  color: #666;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.bags-page .error-text {
+  color: #991b1b;
+  text-align: center;
+  padding: 1rem;
+  background: #fef2f2;
+  border-radius: 6px;
+}
+
+.bags-page .empty-message {
+  color: #666;
+  text-align: center;
+  padding: 1.5rem 0;
+  font-style: italic;
+}
+
+.bags-page .remove-btn {
+  padding: 0.3rem 0.5rem;
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.bags-page .remove-btn:hover {
+  background: #fee2e2;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .bag-card-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .bag-stats {
+    gap: 1.5rem;
+  }
+
+  .assign-fields {
+    flex-wrap: nowrap;
+  }
+
+  .lookup-row input {
+    max-width: 300px;
+  }
+}
