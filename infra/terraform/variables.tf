@@ -1,0 +1,45 @@
+variable "aws_region" {
+  description = "AWS region for all resources"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "cloudflare_api_token" {
+  description = "Cloudflare API token for managing resources"
+  type        = string
+  sensitive   = true
+}
+
+variable "cloudflare_account_id" {
+  description = "Cloudflare account ID"
+  type        = string
+}
+
+variable "cloudflare_zone_id" {
+  description = "Cloudflare zone ID for oruganti.in"
+  type        = string
+}
+
+variable "domain_name" {
+  description = "Base domain name"
+  type        = string
+  default     = "oruganti.in"
+}
+
+variable "r2_bucket_name" {
+  description = "Cloudflare R2 bucket name for scan image storage"
+  type        = string
+  default     = "brickwise-scan-images"
+}
+
+variable "ecr_repo_name" {
+  description = "AWS ECR repository name for backend Docker images"
+  type        = string
+  default     = "brickwise-api"
+}
+
+variable "project_name" {
+  description = "Project name used for resource naming"
+  type        = string
+  default     = "brickwise"
+}

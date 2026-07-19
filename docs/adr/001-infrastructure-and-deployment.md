@@ -54,7 +54,7 @@ Internet
 | TypeScript | TypeScript | 5.x |
 | ORM | Drizzle ORM | Latest stable |
 | Testing | Vitest + fast-check | Latest stable |
-| Infrastructure-as-Code | AWS SAM | Latest |
+| Infrastructure-as-Code | AWS SAM + Terraform | Latest |
 | Container Base | node:24-slim | Official LTS |
 | Lambda Adapter | aws-lambda-web-adapter | 0.8.x |
 
@@ -110,6 +110,30 @@ Push to main
 
 Cloudflare Pages is configured as a **Direct Upload** project (not Git-connected). GitHub Actions owns the build process and pushes the built assets using the `cloudflare/pages-action@v1` action. This keeps all CI/CD logic in GitHub Actions rather than splitting between GitHub and Cloudflare's build system.
 
+### Infrastructure-as-Code Strategy
+
+The project uses a **hybrid SAM + Terraform** approach:
+
+| Tool | Manages | Rationale |
+|------|---------|-----------|
+| AWS SAM | Lambda function, Function URL, IAM execution role | SAM handles Docker image build/push and Lambda lifecycle natively |
+| Terraform | ECR repository, Secrets Manager resources, Cloudflare R2, Cloudflare DNS, Cloudflare Pages project | Terraform covers multi-vendor resources in a single plan |
+
+**Terraform state** is stored locally (not in a remote backend). This is appropriate for a single-developer project where `terraform apply` is only run from the developer's machine. Migration to S3 backend is straightforward later via `terraform init -migrate-state` if CI-driven infrastructure changes are needed.
+
+```
+infra/
+├── terraform/
+│   ├── main.tf              # Provider config, backend (local)
+│   ├── aws.tf               # ECR, Secrets Manager resources
+│   ├── cloudflare.tf        # R2 bucket, DNS records, Pages project
+│   ├── variables.tf         # Input variables
+│   ├── outputs.tf           # ECR URI, Function URL, etc.
+│   └── terraform.tfvars     # Variable values (gitignored)
+└── sam/
+    └── template.yaml        # Lambda function, Function URL, IAM role
+```
+
 ### Cold Start Mitigation
 
 Lambda containers experience 3-5 second cold starts after idle periods. For a personal-use app this is acceptable. If needed later, a CloudWatch EventBridge rule can ping the function every 5 minutes to keep it warm (at negligible cost).
@@ -135,7 +159,7 @@ Lambda containers experience 3-5 second cold starts after idle periods. For a pe
 - Backend code is fully portable (standard Express.js in Docker)
 - Leverages existing Cloudflare DNS and GitHub Actions experience
 - All services have always-free tiers (no 12-month expirations)
-- Infrastructure-as-Code via SAM template for reproducibility
+- Infrastructure-as-Code via SAM + Terraform for full reproducibility across AWS and Cloudflare
 
 ### Negative
 

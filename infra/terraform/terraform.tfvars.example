@@ -1,0 +1,11 @@
+# Copy this file to terraform.tfvars and fill in actual values.
+# terraform.tfvars is gitignored - never commit real values.
+
+aws_region            = "us-east-1"
+cloudflare_api_token  = "your-cloudflare-api-token"
+cloudflare_account_id = "your-cloudflare-account-id"
+cloudflare_zone_id    = "your-cloudflare-zone-id-for-oruganti-in"
+domain_name           = "oruganti.in"
+r2_bucket_name        = "brickwise-scan-images"
+ecr_repo_name         = "brickwise-api"
+project_name          = "brickwise"
