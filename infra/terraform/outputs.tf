@@ -16,10 +16,10 @@ output "lambda_function_url" {
 output "secrets_arns" {
   description = "ARNs of all Secrets Manager secrets"
   value = {
-    db_url             = aws_secretsmanager_secret.db_url.arn
+    db_url              = aws_secretsmanager_secret.db_url.arn
     rebrickable_api_key = aws_secretsmanager_secret.rebrickable_api_key.arn
-    r2_credentials     = aws_secretsmanager_secret.r2_credentials.arn
-    jwt_secret         = aws_secretsmanager_secret.jwt_secret.arn
+    r2_credentials      = aws_secretsmanager_secret.r2_credentials.arn
+    jwt_secret          = aws_secretsmanager_secret.jwt_secret.arn
   }
 }
 
