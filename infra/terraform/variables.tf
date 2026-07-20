@@ -43,3 +43,23 @@ variable "project_name" {
   type        = string
   default     = "brickwise"
 }
+
+# --- Neon (PostgreSQL) ---
+
+variable "neon_api_key" {
+  description = "Neon API key for managing database resources"
+  type        = string
+  sensitive   = true
+}
+
+variable "neon_project_id" {
+  description = "Existing Neon project ID (for import)"
+  type        = string
+  default     = ""
+}
+
+variable "neon_region" {
+  description = "Neon region identifier"
+  type        = string
+  default     = "aws-us-east-1"
+}

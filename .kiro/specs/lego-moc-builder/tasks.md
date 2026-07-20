@@ -481,7 +481,7 @@ Incremental implementation of the LEGO MOC Builder PWA following a monorepo stru
 - Infrastructure tasks (1.x and 2.x) should be completed first as all other tasks depend on them
 - Server-side tasks (3-17) can be developed independently of client tasks (18-23)
 - The shared types package (2.4) ensures type safety across client and server
-- **IaC approach**: SAM manages Lambda lifecycle; Terraform manages platform resources (ECR, Secrets Manager, Cloudflare). Terraform state is local.
+- **IaC approach**: SAM manages Lambda lifecycle; Terraform manages platform resources (ECR, Secrets Manager, Cloudflare, Neon). Terraform state in Terraform Cloud, applied via GitHub Actions CI/CD.
 
 ## Task Dependency Graph
 

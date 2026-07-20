@@ -42,3 +42,21 @@ output "backend_url" {
   description = "Backend API URL"
   value       = "https://lego-api.${var.domain_name}"
 }
+
+# --- Neon Outputs ---
+
+output "neon_project_id" {
+  description = "Neon project ID"
+  value       = neon_project.main.id
+}
+
+output "neon_connection_uri" {
+  description = "Neon PostgreSQL connection URI (sensitive)"
+  value       = neon_project.main.connection_uri
+  sensitive   = true
+}
+
+output "neon_branch_id" {
+  description = "Neon main branch ID"
+  value       = neon_branch.main.id
+}

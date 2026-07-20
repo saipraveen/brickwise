@@ -10,10 +10,18 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 4.0"
     }
+    neon = {
+      source  = "kislerdm/neon"
+      version = "~> 0.6"
+    }
   }
 
-  backend "local" {
-    path = "terraform.tfstate"
+  backend "cloud" {
+    organization = "oruganti"
+
+    workspaces {
+      name = "brickwise"
+    }
   }
 }
 
@@ -23,4 +31,8 @@ provider "aws" {
 
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
+}
+
+provider "neon" {
+  api_key = var.neon_api_key
 }

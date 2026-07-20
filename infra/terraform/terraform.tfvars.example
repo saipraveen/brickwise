@@ -9,3 +9,8 @@ domain_name           = "oruganti.in"
 r2_bucket_name        = "brickwise-scan-images"
 ecr_repo_name         = "brickwise-api"
 project_name          = "brickwise"
+
+# Neon (PostgreSQL)
+neon_api_key          = "your-neon-api-key"
+neon_project_id       = ""
+neon_region           = "aws-us-east-1"

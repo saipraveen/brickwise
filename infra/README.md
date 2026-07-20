@@ -2,45 +2,71 @@
 
 This project uses a hybrid **Terraform + AWS SAM** approach for infrastructure-as-code:
 
-- **Terraform** manages platform resources: ECR, Secrets Manager, Cloudflare R2, DNS, and Pages
+- **Terraform** manages platform resources: ECR, Secrets Manager, Cloudflare R2, DNS, Pages, and Neon PostgreSQL
 - **AWS SAM** manages the Lambda function lifecycle (Docker image build/push, Function URL, IAM)
+- **Terraform Cloud** stores state remotely (free tier)
+- **GitHub Actions** runs `terraform plan` on PRs and `terraform apply` on merge to main
 
 See [ADR-001](../docs/adr/001-infrastructure-and-deployment.md) for the full decision record.
 
 ## Prerequisites
 
-- [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.5
-- [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html)
-- [AWS CLI](https://aws.amazon.com/cli/) configured with credentials
-- Cloudflare API token with R2, DNS, and Pages permissions
+- [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) (for Lambda deploys)
+- [AWS CLI](https://aws.amazon.com/cli/) configured with credentials (for SAM)
+- A [Terraform Cloud](https://app.terraform.io) account (free tier)
 
-## Terraform Setup
+Terraform itself is NOT required locally - all plans and applies run via GitHub Actions against Terraform Cloud.
+
+## Terraform Cloud Setup (One-Time)
+
+1. Sign up at [app.terraform.io](https://app.terraform.io)
+2. Create organization: `oruganti`
+3. Create workspace: `brickwise` (Execution Mode: API-driven)
+4. Add workspace variables (all marked "Sensitive"):
+   - `AWS_ACCESS_KEY_ID` (env var)
+   - `AWS_SECRET_ACCESS_KEY` (env var)
+   - `cloudflare_api_token` (Terraform var)
+   - `cloudflare_account_id` (Terraform var)
+   - `cloudflare_zone_id` (Terraform var)
+   - `neon_api_key` (Terraform var)
+5. Generate a Team or User API token
+6. Add `TF_API_TOKEN` as a GitHub Actions secret in the repo
+
+## How It Works
+
+```
+Push to main (infra/terraform/**)
+    └── GitHub Actions (deploy-infra.yml)
+        ├── terraform init (connects to Terraform Cloud)
+        ├── terraform plan (shows changes)
+        └── terraform apply (applies to real infrastructure)
+
+Pull Request (infra/terraform/**)
+    └── GitHub Actions (deploy-infra.yml)
+        ├── terraform plan (shows what would change)
+        └── Comments plan output on the PR for review
+```
+
+## Importing Existing Resources
+
+Resources created manually before IaC was set up need to be imported into Terraform Cloud state. Run these locally (one-time) with Terraform CLI, or via the TF Cloud Run page:
 
 ```bash
+# Install Terraform locally just for import (or use TF Cloud CLI)
 cd infra/terraform
-
-# 1. Copy example vars and fill in real values
-cp terraform.tfvars.example terraform.tfvars
-# Edit terraform.tfvars with your actual values
-
-# 2. Initialize Terraform
 terraform init
 
-# 3. Import existing resources (already created manually)
-# ECR repository:
+# ECR Repository
 terraform import aws_ecr_repository.api brickwise-api
 
-# Cloudflare R2 bucket:
+# Neon project
+terraform import neon_project.main <neon-project-id>
+
+# Cloudflare R2 bucket
 terraform import cloudflare_r2_bucket.scan_images <account_id>/brickwise-scan-images
 
-# Cloudflare Pages project:
+# Cloudflare Pages project
 terraform import cloudflare_pages_project.frontend <account_id>/brickwise
-
-# 4. Plan and review changes
-terraform plan
-
-# 5. Apply (creates any missing resources, updates existing ones)
-terraform apply
 ```
 
 ## SAM Setup
@@ -56,66 +82,32 @@ sam deploy --guided
 # Follow prompts:
 #   Stack name: brickwise-api
 #   Region: us-east-1
-#   Parameter EcrRepositoryUri: <your-account-id>.dkr.ecr.us-east-1.amazonaws.com/brickwise-api
-#   Parameter ImageTag: latest
 #   Confirm changes before deploy: Yes
 #   Allow SAM CLI IAM role creation: Yes
 #   Save arguments to samconfig.toml: Yes
 
-# 3. Subsequent deploys
+# 3. Subsequent deploys (via CI/CD or manually)
 sam build && sam deploy
 ```
 
 ## Post-Deploy Steps
 
 1. After the first SAM deploy, grab the Lambda Function URL from the stack outputs
-2. Update `infra/terraform/cloudflare.tf` - replace the `lego-api` CNAME `content` with the actual Function URL domain
-3. Run `terraform apply` to update the DNS record
-
-## Resource Import Commands
-
-These resources were created manually before IaC was set up. Import them into Terraform state:
-
-```bash
-# ECR Repository
-terraform import aws_ecr_repository.api brickwise-api
-
-# Secrets Manager secrets
-terraform import aws_secretsmanager_secret.db_url brickwise/db-url
-terraform import aws_secretsmanager_secret.rebrickable_api_key brickwise/rebrickable-api-key
-terraform import aws_secretsmanager_secret.r2_credentials brickwise/r2-credentials
-terraform import aws_secretsmanager_secret.jwt_secret brickwise/jwt-secret
-
-# Cloudflare R2 bucket
-terraform import cloudflare_r2_bucket.scan_images <account_id>/brickwise-scan-images
-
-# Cloudflare Pages project
-terraform import cloudflare_pages_project.frontend <account_id>/brickwise
-```
-
-Replace `<account_id>` with your Cloudflare account ID.
-
-## State Management
-
-Terraform state is stored **locally** (`terraform.tfstate`). This is appropriate for a single-developer project. The state file is gitignored.
-
-If CI-driven infrastructure changes are needed later, migrate to S3 backend:
-
-```bash
-terraform init -migrate-state
-```
+2. Update the `lego-api` CNAME in `infra/terraform/cloudflare.tf` with the Function URL domain
+3. Push the change - GitHub Actions will apply via Terraform Cloud
 
 ## Architecture Diagram
 
 ```
 infra/
 ├── terraform/
-│   ├── main.tf              # Provider config, local backend
+│   ├── main.tf              # Provider config, Terraform Cloud backend
 │   ├── aws.tf               # ECR, Secrets Manager resources
 │   ├── cloudflare.tf        # R2 bucket, DNS records, Pages project
+│   ├── neon.tf              # Neon PostgreSQL project, branch, role, database
 │   ├── variables.tf         # Input variables
 │   ├── outputs.tf           # Resource outputs
-│   └── terraform.tfvars     # Variable values (gitignored)
+│   └── terraform.tfvars.example  # Variable template (actual values in TF Cloud)
 └── sam/
     └── template.yaml        # Lambda function, Function URL, IAM role
 ```
@@ -129,5 +121,7 @@ All infrastructure resources are within always-free tiers:
 - Cloudflare R2: 10 GB free
 - Cloudflare Pages: Unlimited, free
 - Cloudflare DNS: Free
+- Neon PostgreSQL: 0.5 GB, 100 compute-hours/month free
+- Terraform Cloud: Free (500 managed resources)
 
 Only Bedrock usage (AI scanning) incurs variable costs (~$0.50-2/month).
