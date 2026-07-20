@@ -1,6 +1,10 @@
 # ECR Repository for backend Docker images
 # Note: This repository already exists and needs to be imported into state.
-# See README.md for import command.
+import {
+  to = aws_ecr_repository.api
+  id = "brickwise-api"
+}
+
 resource "aws_ecr_repository" "api" {
   name                 = var.ecr_repo_name
   image_tag_mutability = "MUTABLE"

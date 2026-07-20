@@ -52,6 +52,11 @@ variable "neon_api_key" {
   sensitive   = true
 }
 
+variable "neon_org_id" {
+  description = "Neon organization ID"
+  type        = string
+}
+
 variable "neon_project_id" {
   description = "Existing Neon project ID (for import)"
   type        = string

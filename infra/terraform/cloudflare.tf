@@ -1,6 +1,10 @@
 # R2 Bucket for scan image storage and recognition result caching
 # Note: This bucket already exists and needs to be imported into state.
-# See README.md for import command.
+import {
+  to = cloudflare_r2_bucket.scan_images
+  id = "724e354954a85b8c21a5353ebaa868e8/brickwise-scan-images"
+}
+
 resource "cloudflare_r2_bucket" "scan_images" {
   account_id = var.cloudflare_account_id
   name       = var.r2_bucket_name
@@ -29,7 +33,11 @@ resource "cloudflare_record" "backend" {
 
 # Cloudflare Pages project for frontend hosting
 # Note: This project already exists and needs to be imported into state.
-# See README.md for import command.
+import {
+  to = cloudflare_pages_project.frontend
+  id = "724e354954a85b8c21a5353ebaa868e8/brickwise"
+}
+
 resource "cloudflare_pages_project" "frontend" {
   account_id        = var.cloudflare_account_id
   name              = var.project_name
