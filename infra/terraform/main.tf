@@ -16,7 +16,7 @@ terraform {
     }
   }
 
-  backend "cloud" {
+  cloud {
     organization = "oruganti"
 
     workspaces {
