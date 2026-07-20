@@ -7,9 +7,15 @@
 #   terraform import neon_project.main <project-id>
 #   terraform import neon_branch.main <project-id>:<branch-id>
 
+import {
+  to = neon_project.main
+  id = "still-flower-03882155"
+}
+
 resource "neon_project" "main" {
   name       = var.project_name
   region_id  = var.neon_region
+  org_id     = var.neon_org_id
   pg_version = 18
 
   default_endpoint_settings {
