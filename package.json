@@ -1,0 +1,21 @@
+{
+  "name": "brickwise",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LEGO MOC Builder - AI-powered brick collection manager and MOC discovery tool",
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev:client": "pnpm --filter client dev",
+    "dev:server": "pnpm --filter server dev",
+    "build": "pnpm -r build",
+    "build:client": "pnpm --filter client build",
+    "build:server": "pnpm --filter server build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "clean": "pnpm -r clean"
+  }
+}

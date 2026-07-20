@@ -27,7 +27,7 @@ The backend is deployed as a standard Docker container on AWS Lambda using the L
 | Offline Strategy | IndexedDB + Service Worker | Full catalog cached locally, inventory operations work offline, background sync when connection restored |
 | Authentication | JWT with refresh tokens | Stateless auth for API, supports invite-only sharing model |
 | Cost Strategy | Tiered model selection + usage quotas | Use cheapest model (Haiku) for initial scans, escalate to Sonnet for ambiguous cases. Daily scan limits prevent runaway costs. |
-| Infrastructure-as-Code | AWS SAM | Defines Lambda function, ECR image, Function URL, IAM roles |
+| Infrastructure-as-Code | AWS SAM + Terraform | SAM for Lambda lifecycle; Terraform for ECR, Secrets Manager, Cloudflare, Neon resources. State in Terraform Cloud, applied via GitHub Actions. |
 | CI/CD | GitHub Actions | Build Docker image, push to ECR, deploy Lambda; deploy frontend to Cloudflare Pages |
 | Container Registry | AWS ECR | 500 MB always-free tier, integrated with Lambda |
 

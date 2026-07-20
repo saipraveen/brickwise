@@ -54,7 +54,7 @@ Internet
 | TypeScript | TypeScript | 5.x |
 | ORM | Drizzle ORM | Latest stable |
 | Testing | Vitest + fast-check | Latest stable |
-| Infrastructure-as-Code | AWS SAM | Latest |
+| Infrastructure-as-Code | AWS SAM + Terraform | Latest |
 | Container Base | node:24-slim | Official LTS |
 | Lambda Adapter | aws-lambda-web-adapter | 0.8.x |
 
@@ -104,11 +104,40 @@ Push to main
     ├── Client changes (/client/**)
     │       └── GitHub Actions → Build React → Direct Upload to Cloudflare Pages (cloudflare/pages-action@v1)
     │
-    └── Server changes (/server/**)
-            └── GitHub Actions → Build Docker → Push to ECR → Update Lambda function
+    ├── Server changes (/server/**)
+    │       └── GitHub Actions → Build Docker → Push to ECR → Update Lambda function
+    │
+    └── Infra changes (/infra/terraform/**)
+            └── GitHub Actions → Terraform Plan (on PR) → Terraform Apply (on merge)
+                └── State managed in Terraform Cloud (free tier)
 ```
 
 Cloudflare Pages is configured as a **Direct Upload** project (not Git-connected). GitHub Actions owns the build process and pushes the built assets using the `cloudflare/pages-action@v1` action. This keeps all CI/CD logic in GitHub Actions rather than splitting between GitHub and Cloudflare's build system.
+
+### Infrastructure-as-Code Strategy
+
+The project uses a **hybrid SAM + Terraform** approach:
+
+| Tool | Manages | Rationale |
+|------|---------|-----------|
+| AWS SAM | Lambda function, Function URL, IAM execution role | SAM handles Docker image build/push and Lambda lifecycle natively |
+| Terraform | ECR repository, Secrets Manager resources, Cloudflare R2, Cloudflare DNS, Cloudflare Pages project, Neon PostgreSQL | Terraform covers multi-vendor resources in a single plan |
+
+**Terraform state** is stored in **Terraform Cloud** (free tier, 500 managed resources). Infrastructure changes are applied via GitHub Actions - `terraform plan` runs on PRs for review, `terraform apply` runs on merge to main. Provider credentials (AWS, Cloudflare, Neon) are stored as sensitive workspace variables in Terraform Cloud.
+
+```
+infra/
+├── terraform/
+│   ├── main.tf              # Provider config, backend (Terraform Cloud)
+│   ├── aws.tf               # ECR, Secrets Manager resources
+│   ├── cloudflare.tf        # R2 bucket, DNS records, Pages project
+│   ├── neon.tf              # Neon PostgreSQL project, branch, role, database
+│   ├── variables.tf         # Input variables
+│   ├── outputs.tf           # ECR URI, Function URL, connection URIs, etc.
+│   └── terraform.tfvars.example  # Variable template (actual values in TF Cloud)
+└── sam/
+    └── template.yaml        # Lambda function, Function URL, IAM role
+```
 
 ### Cold Start Mitigation
 
@@ -135,7 +164,7 @@ Lambda containers experience 3-5 second cold starts after idle periods. For a pe
 - Backend code is fully portable (standard Express.js in Docker)
 - Leverages existing Cloudflare DNS and GitHub Actions experience
 - All services have always-free tiers (no 12-month expirations)
-- Infrastructure-as-Code via SAM template for reproducibility
+- Infrastructure-as-Code via SAM + Terraform for full reproducibility across AWS and Cloudflare
 
 ### Negative
 

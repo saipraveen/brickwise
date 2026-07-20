@@ -29,6 +29,13 @@ Thumbs.db
 .aws/
 samconfig.toml
 
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+terraform.tfvars
+*.auto.tfvars
+
 # Docker
 .docker/
 
