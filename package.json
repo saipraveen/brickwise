@@ -2,6 +2,7 @@
   "name": "brickwise",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "LEGO MOC Builder - AI-powered brick collection manager and MOC discovery tool",
   "packageManager": "pnpm@9.15.4",
   "engines": {
@@ -17,5 +18,12 @@
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "clean": "pnpm -r clean"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.7.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "typescript-eslint": "^8.65.0"
   }
 }

@@ -84,7 +84,7 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
         });
       }
     }
-  } catch (error: unknown) {
+  } catch (_error: unknown) {
     res.status(503).json({
       error: "service_unavailable",
       message: "MOC data cannot be loaded from Rebrickable. Please retry.",
