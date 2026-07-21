@@ -35,7 +35,7 @@ resource "cloudflare_record" "backend" {
 # Note: This project already exists and needs to be imported into state.
 import {
   to = cloudflare_pages_project.frontend
-  id = "brickwise"
+  id = "724e354954a85b8c21a5353ebaa868e8/brickwise"
 }
 
 resource "cloudflare_pages_project" "frontend" {
