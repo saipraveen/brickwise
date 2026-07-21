@@ -13,10 +13,11 @@ import {
 }
 
 resource "neon_project" "main" {
-  name       = var.project_name
-  region_id  = var.neon_region
-  org_id     = var.neon_org_id
-  pg_version = 18
+  name                      = var.project_name
+  region_id                 = var.neon_region
+  org_id                    = var.neon_org_id
+  pg_version                = 18
+  history_retention_seconds = 21600
 
   default_endpoint_settings {
     autoscaling_limit_min_cu = 0.25
