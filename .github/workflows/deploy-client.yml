@@ -40,15 +40,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared
-        run: |
-          cd shared
-          npx tsc --version
-          npx tsc -b --verbose 2>&1
-          ls -la dist/ || echo "BUILD FAILED - no dist"
-          cd ..
-
-      - name: Verify shared build
-        run: ls -la shared/dist/ 2>&1 || echo "NO DIST DIR"; ls -la node_modules/shared/ 2>&1 || echo "NO SYMLINK"
+        run: pnpm --filter shared build
 
       - name: Lint shared
         run: pnpm --filter shared lint

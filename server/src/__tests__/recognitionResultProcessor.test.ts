@@ -21,7 +21,7 @@ describe("processRecognitionResult", () => {
     const bricks = processRecognitionResult(result);
 
     expect(bricks).toHaveLength(1);
-    expect(bricks[0].needsReview).toBe(true);
+    expect(bricks[0]!.needsReview).toBe(true);
   });
 
   it("does not flag bricks with confidence >= 0.70 for review", () => {
@@ -49,8 +49,8 @@ describe("processRecognitionResult", () => {
     const bricks = processRecognitionResult(result);
 
     expect(bricks).toHaveLength(2);
-    expect(bricks[0].needsReview).toBe(false);
-    expect(bricks[1].needsReview).toBe(false);
+    expect(bricks[0]!.needsReview).toBe(false);
+    expect(bricks[1]!.needsReview).toBe(false);
   });
 
   it("preserves all fields from the recognized part", () => {
@@ -70,7 +70,7 @@ describe("processRecognitionResult", () => {
 
     const bricks = processRecognitionResult(result);
 
-    expect(bricks[0]).toEqual({
+    expect(bricks[0]!).toEqual({
       partNumber: "3622",
       colorId: 11,
       colorName: "Dark Bluish Gray",
@@ -116,7 +116,7 @@ describe("processRecognitionResult", () => {
 
     const bricks = processRecognitionResult(result);
 
-    expect(bricks[0].needsReview).toBe(false); // exactly 0.70
-    expect(bricks[1].needsReview).toBe(true); // just below 0.70
+    expect(bricks[0]!.needsReview).toBe(false); // exactly 0.70
+    expect(bricks[1]!.needsReview).toBe(true); // just below 0.70
   });
 });
