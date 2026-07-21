@@ -57,6 +57,6 @@ output "neon_connection_uri" {
 }
 
 output "neon_branch_id" {
-  description = "Neon main branch ID"
-  value       = neon_branch.main.id
+  description = "Neon default branch ID"
+  value       = neon_project.main.default_branch_id
 }
