@@ -39,6 +39,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build shared
+        run: pnpm --filter shared build
+
       - name: Lint shared
         run: pnpm --filter shared lint
 
@@ -56,9 +59,6 @@ jobs:
 
       - name: Run client tests
         run: pnpm --filter client test
-
-      - name: Build shared
-        run: pnpm --filter shared build
 
       - name: Build client
         run: pnpm --filter client build
