@@ -33,7 +33,7 @@ export interface SyncStatus {
   lastError: string | null;
 }
 
-let syncStatus: SyncStatus = {
+const syncStatus: SyncStatus = {
   lastSyncTime: null,
   nextScheduledSync: null,
   isRunning: false,
