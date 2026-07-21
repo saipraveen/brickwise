@@ -32,12 +32,6 @@ resource "cloudflare_record" "backend" {
 }
 
 # Cloudflare Pages project for frontend hosting
-# Note: This project already exists and needs to be imported into state.
-import {
-  to = cloudflare_pages_project.frontend
-  id = "724e354954a85b8c21a5353ebaa868e8/brickwise"
-}
-
 resource "cloudflare_pages_project" "frontend" {
   account_id        = var.cloudflare_account_id
   name              = var.project_name
@@ -60,4 +54,11 @@ resource "cloudflare_pages_project" "frontend" {
       }
     }
   }
+}
+
+# Custom domain for the Pages project
+resource "cloudflare_pages_domain" "frontend" {
+  account_id   = var.cloudflare_account_id
+  project_name = cloudflare_pages_project.frontend.name
+  domain       = "lego.${var.domain_name}"
 }
