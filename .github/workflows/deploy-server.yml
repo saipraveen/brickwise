@@ -46,6 +46,9 @@ jobs:
       - name: Build shared
         run: pnpm --filter shared build
 
+      - name: Verify shared build
+        run: ls -la shared/dist/index.d.ts && cat shared/package.json | grep -A5 exports
+
       - name: Lint shared
         run: pnpm --filter shared lint
 
