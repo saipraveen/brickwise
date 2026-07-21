@@ -25,23 +25,20 @@ resource "neon_project" "main" {
   }
 }
 
-# The main branch (created automatically with the project, but tracked here)
-resource "neon_branch" "main" {
-  project_id = neon_project.main.id
-  name       = "main"
-}
+# The default branch already exists (created with the project).
+# We reference it via neon_project.main.default_branch_id.
 
 # Database role for the application
 resource "neon_role" "app" {
   project_id = neon_project.main.id
-  branch_id  = neon_branch.main.id
+  branch_id  = neon_project.main.default_branch_id
   name       = "brickwise_app"
 }
 
 # The default database
 resource "neon_database" "main" {
   project_id = neon_project.main.id
-  branch_id  = neon_branch.main.id
+  branch_id  = neon_project.main.default_branch_id
   name       = "neondb"
   owner_name = neon_role.app.name
 }
