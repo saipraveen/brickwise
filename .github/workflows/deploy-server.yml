@@ -101,3 +101,13 @@ jobs:
             --function-name "brickwise-api" \
             --image-uri "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" \
             --region $AWS_REGION
+
+      - name: Run database migrations
+        run: |
+          DATABASE_URL=$(aws secretsmanager get-secret-value \
+            --secret-id brickwise/db-url \
+            --query 'SecretString' \
+            --output text \
+            --region $AWS_REGION)
+          export DATABASE_URL
+          pnpm --filter server db:migrate

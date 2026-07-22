@@ -21,11 +21,10 @@ resource "cloudflare_record" "frontend" {
 }
 
 # DNS CNAME record for backend API (Lambda Function URL)
-# Note: Update the content value after first SAM deploy with the actual Function URL domain
 resource "cloudflare_record" "backend" {
   zone_id = var.cloudflare_zone_id
   name    = "lego-api"
-  content = "placeholder.lambda-url.us-east-1.on.aws"
+  content = var.lambda_function_url_domain
   type    = "CNAME"
   proxied = true
   ttl     = 1 # Auto when proxied
