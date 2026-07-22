@@ -30,6 +30,28 @@ resource "cloudflare_record" "backend" {
   ttl     = 1 # Auto when proxied
 }
 
+# Origin Rule: override Host header for Lambda Function URL
+# Lambda Function URLs reject requests where the Host header doesn't match
+# the Function URL domain. Cloudflare proxied mode forwards the custom domain
+# as Host, so we override it to the actual Lambda domain.
+resource "cloudflare_ruleset" "backend_origin_rule" {
+  zone_id     = var.cloudflare_zone_id
+  name        = "Backend API origin override"
+  description = "Override Host header for Lambda Function URL"
+  kind        = "zone"
+  phase       = "http_request_origin"
+
+  rules {
+    ref         = "lambda_host_override"
+    description = "Set Host header to Lambda Function URL domain"
+    expression  = "(http.host eq \"lego-api.${var.domain_name}\")"
+    action      = "route"
+    action_parameters {
+      host_header = var.lambda_function_url_domain
+    }
+  }
+}
+
 # Cloudflare Pages project for frontend hosting
 resource "cloudflare_pages_project" "frontend" {
   account_id        = var.cloudflare_account_id
