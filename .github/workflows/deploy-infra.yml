@@ -127,6 +127,7 @@ jobs:
             --region $AWS_REGION \
             --no-confirm-changeset \
             --no-fail-on-empty-changeset \
+            --image-repository $ECR_REGISTRY/brickwise-api \
             --parameter-overrides \
               EcrRepositoryUri=$ECR_REGISTRY/brickwise-api \
               ImageTag=latest
