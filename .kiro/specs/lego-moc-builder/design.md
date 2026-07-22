@@ -938,7 +938,7 @@ For full rationale, see [ADR-001: Infrastructure and Deployment Architecture](..
 FROM node:24-slim
 
 # Lambda Web Adapter - the ONLY Lambda-specific element
-COPY --from=public.ecr.aws/awsguru/aws-lambda-web-adapter:0.8.4 /lambda-web-adapter /opt/extensions/lambda-web-adapter
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:1.0.1 /lambda-adapter /opt/extensions/lambda-adapter
 
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
