@@ -30,6 +30,9 @@ jobs:
   deploy:
     name: Lint, Test, Build, Deploy
     runs-on: ubuntu-latest
+    concurrency:
+      group: lambda-brickwise-api
+      cancel-in-progress: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -93,9 +96,8 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
-          LAMBDA_FUNCTION_NAME: ${{ vars.LAMBDA_FUNCTION_NAME }}
         run: |
           aws lambda update-function-code \
-            --function-name "$LAMBDA_FUNCTION_NAME" \
+            --function-name "brickwise-api" \
             --image-uri "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" \
             --region $AWS_REGION
