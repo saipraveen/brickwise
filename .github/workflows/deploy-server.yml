@@ -16,7 +16,7 @@ on:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
 
 concurrency:
   group: deploy-server-${{ github.ref }}
@@ -104,6 +104,14 @@ jobs:
 
       - name: Run database migrations
         run: |
+          pnpm --filter server db:generate
+          if [ -n "$(git status --porcelain server/drizzle)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add server/drizzle
+            git commit -m "chore: auto-generate drizzle migration [skip ci]"
+            git push
+          fi
           DATABASE_URL=$(aws secretsmanager get-secret-value \
             --secret-id brickwise/db-url \
             --query 'SecretString' \
