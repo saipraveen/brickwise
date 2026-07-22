@@ -17,6 +17,7 @@ on:
 permissions:
   id-token: write
   contents: write
+  pull-requests: write
 
 concurrency:
   group: deploy-server-${{ github.ref }}
@@ -106,16 +107,28 @@ jobs:
         run: |
           pnpm --filter server db:generate
           if [ -n "$(git status --porcelain server/drizzle)" ]; then
+            MIGRATION_BRANCH="chore/drizzle-migration-$(date +%Y%m%d%H%M%S)"
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
+            git checkout -b "$MIGRATION_BRANCH"
             git add server/drizzle
-            git commit -m "chore: auto-generate drizzle migration [skip ci]"
-            git push
+            git commit -m "chore: auto-generate drizzle migration"
+            git push -u origin "$MIGRATION_BRANCH"
+            gh pr create \
+              --base main \
+              --head "$MIGRATION_BRANCH" \
+              --title "chore: auto-generate drizzle migration" \
+              --body "Auto-generated migration files from schema changes. Merge to apply migrations on next deploy." \
+              --label "automated"
+            echo "::warning::Migration files generated and PR created. Merge the PR and re-run this workflow to apply migrations."
+          else
+            DATABASE_URL=$(aws secretsmanager get-secret-value \
+              --secret-id brickwise/db-url \
+              --query 'SecretString' \
+              --output text \
+              --region $AWS_REGION)
+            export DATABASE_URL
+            pnpm --filter server db:migrate
           fi
-          DATABASE_URL=$(aws secretsmanager get-secret-value \
-            --secret-id brickwise/db-url \
-            --query 'SecretString' \
-            --output text \
-            --region $AWS_REGION)
-          export DATABASE_URL
-          pnpm --filter server db:migrate
+        env:
+          GH_TOKEN: ${{ github.token }}
