@@ -1,0 +1,13 @@
+node_modules
+**/node_modules
+.git
+.github
+.kiro
+.vscode
+client/dist
+client/src
+docs
+infra
+*.md
+.env
+.env.*
