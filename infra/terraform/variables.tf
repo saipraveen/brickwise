@@ -68,3 +68,9 @@ variable "neon_region" {
   type        = string
   default     = "aws-us-east-1"
 }
+
+variable "lambda_function_url_domain" {
+  description = "Lambda Function URL domain (without https:// prefix), e.g. abc123.lambda-url.us-east-1.on.aws"
+  type        = string
+  default     = "a4dqa34vbkgmzj4vf5gxqux5rm0lqvas.lambda-url.us-east-1.on.aws"
+}
