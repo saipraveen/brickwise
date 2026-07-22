@@ -35,6 +35,13 @@ Resources:
         Variables:
           PORT: "8080"
           NODE_ENV: !Ref Environment
+          DATABASE_URL: !Sub "{{resolve:secretsmanager:brickwise/db-url}}"
+          JWT_SECRET: !Sub "{{resolve:secretsmanager:brickwise/jwt-secret}}"
+          REBRICKABLE_API_KEY: !Sub "{{resolve:secretsmanager:brickwise/rebrickable-api-key}}"
+          R2_ACCESS_KEY_ID: !Sub "{{resolve:secretsmanager:brickwise/r2-credentials:SecretString:access_key_id}}"
+          R2_SECRET_ACCESS_KEY: !Sub "{{resolve:secretsmanager:brickwise/r2-credentials:SecretString:secret_access_key}}"
+          R2_ENDPOINT: !Sub "{{resolve:secretsmanager:brickwise/r2-credentials:SecretString:endpoint}}"
+          R2_BUCKET_NAME: "brickwise-scan-images"
       FunctionUrlConfig:
         AuthType: NONE
         Cors:
