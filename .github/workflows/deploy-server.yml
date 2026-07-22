@@ -118,8 +118,7 @@ jobs:
               --base main \
               --head "$MIGRATION_BRANCH" \
               --title "chore: auto-generate drizzle migration" \
-              --body "Auto-generated migration files from schema changes. Merge to apply migrations on next deploy." \
-              --label "automated"
+              --body "Auto-generated migration files from schema changes. Merge to apply migrations on next deploy."
             echo "::warning::Migration files generated and PR created. Merge the PR and re-run this workflow to apply migrations."
           else
             DATABASE_URL=$(aws secretsmanager get-secret-value \
