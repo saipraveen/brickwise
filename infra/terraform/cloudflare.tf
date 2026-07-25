@@ -33,9 +33,9 @@ resource "cloudflare_record" "backend" {
 # Cloudflare Worker script to proxy API requests to Lambda Function URL
 # Rewrites the Host header so Lambda accepts the request
 resource "cloudflare_workers_script" "api_proxy" {
-  account_id  = var.cloudflare_account_id
-  script_name = "brickwise-api-proxy"
-  content     = <<-EOT
+  account_id = var.cloudflare_account_id
+  name       = "brickwise-api-proxy"
+  content    = <<-EOT
     export default {
       async fetch(request) {
         const url = new URL(request.url);
@@ -58,9 +58,9 @@ resource "cloudflare_workers_script" "api_proxy" {
 
 # Route all requests to lego-api.oruganti.in through the Worker
 resource "cloudflare_workers_route" "api_proxy_route" {
-  zone_id = var.cloudflare_zone_id
-  pattern = "lego-api.${var.domain_name}/*"
-  script  = cloudflare_workers_script.api_proxy.script_name
+  zone_id     = var.cloudflare_zone_id
+  pattern     = "lego-api.${var.domain_name}/*"
+  script_name = cloudflare_workers_script.api_proxy.name
 }
 
 # Cloudflare Pages project for frontend hosting
