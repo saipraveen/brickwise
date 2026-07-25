@@ -42,7 +42,7 @@ interface RemoveData {
   setStatus: string;
 }
 
-const API_BASE = "/api/sets";
+const API_BASE = (import.meta.env.VITE_API_URL || "/api") + "/sets";
 
 function getAuthToken(): string | null {
   return localStorage.getItem("accessToken");

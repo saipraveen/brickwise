@@ -41,6 +41,19 @@ resource "cloudflare_workers_script" "api_proxy" {
     });
 
     async function handleRequest(request) {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "https://lego.oruganti.in",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Max-Age": "86400",
+          },
+        });
+      }
+
       var url = new URL(request.url);
       var targetUrl = "https://${var.lambda_function_url_domain}" + url.pathname + url.search;
 
@@ -53,7 +66,11 @@ resource "cloudflare_workers_script" "api_proxy" {
 
       modifiedRequest.headers.set("Host", "${var.lambda_function_url_domain}");
 
-      return fetch(modifiedRequest);
+      var response = await fetch(modifiedRequest);
+      var newResponse = new Response(response.body, response);
+      newResponse.headers.set("Access-Control-Allow-Origin", "https://lego.oruganti.in");
+      newResponse.headers.set("Access-Control-Allow-Credentials", "true");
+      return newResponse;
     }
   EOT
 }
