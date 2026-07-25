@@ -36,23 +36,25 @@ resource "cloudflare_workers_script" "api_proxy" {
   account_id = var.cloudflare_account_id
   name       = "brickwise-api-proxy"
   content    = <<-EOT
-    export default {
-      async fetch(request) {
-        const url = new URL(request.url);
-        const targetUrl = "https://${var.lambda_function_url_domain}" + url.pathname + url.search;
+    addEventListener("fetch", function(event) {
+      event.respondWith(handleRequest(event.request));
+    });
 
-        const modifiedRequest = new Request(targetUrl, {
-          method: request.method,
-          headers: new Headers(request.headers),
-          body: request.body,
-          redirect: "follow",
-        });
+    async function handleRequest(request) {
+      var url = new URL(request.url);
+      var targetUrl = "https://${var.lambda_function_url_domain}" + url.pathname + url.search;
 
-        modifiedRequest.headers.set("Host", "${var.lambda_function_url_domain}");
+      var modifiedRequest = new Request(targetUrl, {
+        method: request.method,
+        headers: new Headers(request.headers),
+        body: request.body,
+        redirect: "follow",
+      });
 
-        return fetch(modifiedRequest);
-      },
-    };
+      modifiedRequest.headers.set("Host", "${var.lambda_function_url_domain}");
+
+      return fetch(modifiedRequest);
+    }
   EOT
 }
 
