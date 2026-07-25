@@ -24,6 +24,7 @@ A smart brick collection manager and MOC (My Own Creation) discovery tool for bu
 The app uses a **hybrid AWS Lambda + Cloudflare** architecture:
 - Frontend PWA hosted on Cloudflare Pages
 - Backend runs as a standard Docker container on AWS Lambda via [Lambda Web Adapter](https://github.com/aws/aws-lambda-web-adapter) (zero Lambda-specific code)
+- A Cloudflare Worker proxies API requests, rewriting the Host header so Lambda Function URLs accept them (keeps DDoS protection active)
 - Same Docker image runs locally, on Lambda, or any container platform
 
 See [ADR-001](docs/adr/001-infrastructure-and-deployment.md) for the full infrastructure decision.
@@ -40,7 +41,42 @@ docs/adr/   # Architecture Decision Records
 
 ## Status
 
-Currently in the **specification phase**. Requirements and technical design are complete. Implementation tasks are being generated.
+Currently in **active development**. All spec tasks are implemented. The app is deployed and live at https://lego.oruganti.in.
+
+## Development
+
+### Prerequisites
+
+- Node.js 24 LTS
+- pnpm 9.x
+- Docker (for local server testing)
+
+### Local Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Build shared types
+pnpm --filter shared build
+
+# Run client dev server
+pnpm --filter client dev
+
+# Run server (requires DATABASE_URL in .env)
+pnpm --filter server dev
+```
+
+### Database Migrations
+
+Database migrations are **fully automated via CI**. When you change `server/src/db/schema.ts` and push:
+
+1. The Deploy Server workflow generates new migration files
+2. It creates a PR with the migration files
+3. You merge the PR
+4. The next Deploy Server run applies the migrations to the live database
+
+No local migration commands needed.
 
 ## Disclaimer
 

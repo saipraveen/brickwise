@@ -30,7 +30,10 @@ Internet
    |
    ├── lego.oruganti.in ──────────► Cloudflare Pages (React PWA)
    |
-   ├── lego-api.oruganti.in ──────► AWS Lambda Function URL
+   ├── lego-api.oruganti.in ──────► Cloudflare Worker (Host header rewrite)
+   |                                    │
+   |                                    ▼
+   |                                AWS Lambda Function URL
    |                                    │
    |                                    ├── Express.js (Docker container)
    |                                    ├── Lambda Web Adapter (extension)
@@ -41,6 +44,8 @@ Internet
    |
    └── DNS managed by Cloudflare
 ```
+
+Note: The Cloudflare Worker is needed because Lambda Function URLs reject requests where the Host header doesn't match the Function URL domain. Cloudflare proxied mode sends `Host: lego-api.oruganti.in`, so the Worker rewrites it to the Lambda domain. This keeps DDoS protection active on the free plan.
 
 ### Technology Choices
 

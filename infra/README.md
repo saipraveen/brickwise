@@ -39,13 +39,48 @@ Push to main (infra/terraform/**)
     └── GitHub Actions (deploy-infra.yml)
         ├── terraform init (connects to Terraform Cloud)
         ├── terraform plan (shows changes)
-        └── terraform apply (applies to real infrastructure)
+        ├── terraform apply (applies to real infrastructure)
+        └── sam deploy (updates Lambda function configuration)
+
+Push to main (server/** or shared/**)
+    └── GitHub Actions (deploy-server.yml)
+        ├── lint, typecheck, test
+        ├── build Docker image → push to ECR → update Lambda
+        └── database migrations:
+            ├── drizzle-kit generate (produces migration SQL if schema changed)
+            ├── if new files: create branch + PR (auto-generated)
+            └── if no new files: drizzle-kit migrate (applies to live DB)
+
+Push to main (client/** or shared/**)
+    └── GitHub Actions (deploy-client.yml)
+        ├── lint, typecheck, test
+        ├── build (with VITE_API_URL=https://lego-api.oruganti.in)
+        └── deploy to Cloudflare Pages (direct upload)
 
 Pull Request (infra/terraform/**)
     └── GitHub Actions (deploy-infra.yml)
         ├── terraform plan (shows what would change)
         └── Comments plan output on the PR for review
 ```
+
+## Database Migrations
+
+Migrations are fully automated - no local commands needed:
+
+1. Change `server/src/db/schema.ts`
+2. Push to main
+3. Deploy Server workflow runs `drizzle-kit generate`
+4. If new migration files are produced, CI creates a branch and opens a PR
+5. You review and merge the migration PR
+6. Next Deploy Server run detects no new migrations, runs `drizzle-kit migrate` against Neon
+
+The migration files live in `server/drizzle/` and serve as an audit trail of schema changes.
+
+## Cloudflare Worker Proxy
+
+Lambda Function URLs reject requests where the Host header doesn't match the Function URL domain. Since Cloudflare proxies requests with `Host: lego-api.oruganti.in`, a Cloudflare Worker intercepts all API requests and rewrites the Host header to the Lambda domain before forwarding. This keeps Cloudflare DDoS protection active while working within the free plan (Origin Rules Host Header override is not available on free).
+
+The Worker and route are managed via Terraform in `cloudflare.tf`.
 
 ## Importing Existing Resources
 
@@ -90,11 +125,13 @@ sam deploy --guided
 sam build && sam deploy
 ```
 
-## Post-Deploy Steps
+## Post-Deploy Notes
 
-1. After the first SAM deploy, grab the Lambda Function URL from the stack outputs
-2. Update the `lego-api` CNAME in `infra/terraform/cloudflare.tf` with the Function URL domain
-3. Push the change - GitHub Actions will apply via Terraform Cloud
+The initial setup is complete. All infrastructure is managed via CI/CD:
+- Lambda Function URL domain is configured in `variables.tf` (`lambda_function_url_domain`)
+- DNS, Worker proxy, and route are all managed by Terraform
+- Database migrations run automatically on server deploys
+- Client builds include `VITE_API_URL` pointing to the API domain
 
 ## Architecture Diagram
 
