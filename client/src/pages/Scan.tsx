@@ -26,6 +26,7 @@ interface ReviewBrick {
 }
 
 const LOW_CONFIDENCE_THRESHOLD = 0.7;
+const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 function getAuthToken(): string | null {
   return sessionStorage.getItem("accessToken");
@@ -75,7 +76,7 @@ function Scan() {
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     try {
-      const response = await fetch("/api/scan/identify", {
+      const response = await fetch(`${API_BASE}/scan/identify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -185,7 +186,7 @@ function Scan() {
     };
 
     try {
-      const response = await fetch("/api/inventory/bulk-add", {
+      const response = await fetch(`${API_BASE}/inventory/bulk-add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
