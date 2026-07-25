@@ -33,9 +33,9 @@ resource "cloudflare_record" "backend" {
 # Cloudflare Worker script to proxy API requests to Lambda Function URL
 # Rewrites the Host header so Lambda accepts the request
 resource "cloudflare_workers_script" "api_proxy" {
-  account_id = var.cloudflare_account_id
+  account_id  = var.cloudflare_account_id
   script_name = "brickwise-api-proxy"
-  content    = <<-EOT
+  content     = <<-EOT
     export default {
       async fetch(request) {
         const url = new URL(request.url);
