@@ -62,7 +62,7 @@ jobs:
 
       - name: Build client
         env:
-          VITE_API_URL: https://lego-api.oruganti.in
+          VITE_API_URL: https://lego-api.oruganti.in/api
         run: pnpm --filter client build
 
       - name: Deploy to Cloudflare Pages
