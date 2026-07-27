@@ -1,4 +1,5 @@
 import express, { type Express } from "express";
+import morgan from "morgan";
 import healthRouter from "./routes/health.js";
 import authRouter from "./routes/auth.js";
 import inventoryRouter from "./routes/inventory.js";
@@ -18,6 +19,7 @@ const app: Express = express();
 const port = Number(process.env["PORT"] ?? 8080);
 
 app.use(express.json({ limit: "10mb" }));
+app.use(morgan("combined"));
 app.use("/api", healthRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/inventory", inventoryRouter);
