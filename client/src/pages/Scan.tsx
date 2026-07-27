@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import type { CapturedImage, IdentifiedBrick } from "shared";
 import Camera from "../components/Camera";
+import { getAccessToken } from "../utils/auth";
 import "./Scan.css";
 
 /** Scan session states */
@@ -27,10 +28,6 @@ interface ReviewBrick {
 
 const LOW_CONFIDENCE_THRESHOLD = 0.7;
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
-
-function getAuthToken(): string | null {
-  return sessionStorage.getItem("accessToken");
-}
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 11);
@@ -67,7 +64,7 @@ function Scan() {
     setState("processing");
     setError(null);
 
-    const token = getAuthToken();
+    const token = getAccessToken();
 
     // Extract base64 from data URL
     const base64 = image.dataUrl.split(",")[1] ?? image.dataUrl;
@@ -176,7 +173,7 @@ function Scan() {
     if (reviewBricks.length === 0) return;
     setConfirming(true);
 
-    const token = getAuthToken();
+    const token = getAccessToken();
     const payload = {
       bricks: reviewBricks.map((b) => ({
         partNumber: b.partNumber,
