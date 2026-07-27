@@ -12,6 +12,7 @@ on:
     paths:
       - "server/**"
       - "shared/**"
+      - ".github/workflows/deploy-server.yml"
   workflow_dispatch:
 
 permissions:
