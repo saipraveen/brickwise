@@ -13,6 +13,7 @@ on:
     paths:
       - "client/**"
       - "shared/**"
+      - ".github/workflows/deploy-client.yml"
   workflow_dispatch:
 
 concurrency:
