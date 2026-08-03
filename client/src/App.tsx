@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
+import RequireAuth from "./components/RequireAuth";
 import Home from "./pages/Home";
 import Scan from "./pages/Scan";
 import Inventory from "./pages/Inventory";
@@ -19,17 +20,19 @@ function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="scan" element={<Scan />} />
-          <Route path="inventory" element={<Inventory />} />
-          <Route path="sets" element={<Sets />} />
-          <Route path="bags" element={<Bags />} />
-          <Route path="mocs" element={<Mocs />} />
-          <Route path="rebuilds" element={<Rebuilds />} />
-          <Route path="display" element={<Display />} />
-          <Route path="sharing" element={<Sharing />} />
-          <Route path="search" element={<Search />} />
           <Route path="login" element={<Login />} />
           <Route path="about" element={<About />} />
+          <Route element={<RequireAuth />}>
+            <Route path="scan" element={<Scan />} />
+            <Route path="inventory" element={<Inventory />} />
+            <Route path="sets" element={<Sets />} />
+            <Route path="bags" element={<Bags />} />
+            <Route path="mocs" element={<Mocs />} />
+            <Route path="rebuilds" element={<Rebuilds />} />
+            <Route path="display" element={<Display />} />
+            <Route path="sharing" element={<Sharing />} />
+            <Route path="search" element={<Search />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import type { AuthResponse } from "shared";
 import {
   validateUsername,
@@ -15,6 +15,8 @@ const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: { pathname: string } } | null)?.from?.pathname || "/";
   const [mode, setMode] = useState<Mode>("login");
 
   // Form fields
@@ -109,7 +111,7 @@ function Login() {
 
       const data: AuthResponse = await response.json();
       storeAuthResponse(data);
-      navigate("/");
+      navigate(from, { replace: true });
     } catch {
       setError("Network error. Please try again.");
     } finally {
