@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import type { CapturedImage, IdentifiedBrick } from "shared";
 import Camera from "../components/Camera";
-import { getAccessToken } from "../utils/auth";
+import { fetchWithAuth } from "../utils/auth";
 import "./Scan.css";
 
 /** Scan session states */
@@ -64,8 +64,6 @@ function Scan() {
     setState("processing");
     setError(null);
 
-    const token = getAccessToken();
-
     // Extract base64 from data URL
     const base64 = image.dataUrl.split(",")[1] ?? image.dataUrl;
 
@@ -73,12 +71,8 @@ function Scan() {
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     try {
-      const response = await fetch(`${API_BASE}/scan/identify`, {
+      const response = await fetchWithAuth(`${API_BASE}/scan/identify`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
         body: JSON.stringify({ image: base64 }),
         signal: controller.signal,
       });
@@ -173,7 +167,6 @@ function Scan() {
     if (reviewBricks.length === 0) return;
     setConfirming(true);
 
-    const token = getAccessToken();
     const payload = {
       bricks: reviewBricks.map((b) => ({
         partNumber: b.partNumber,
@@ -183,12 +176,8 @@ function Scan() {
     };
 
     try {
-      const response = await fetch(`${API_BASE}/inventory/bulk-add`, {
+      const response = await fetchWithAuth(`${API_BASE}/inventory/bulk-add`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
         body: JSON.stringify(payload),
       });
 
