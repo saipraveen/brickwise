@@ -106,18 +106,6 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # TEMPORARY (remove after this deploys successfully): the previous
-      # deploy scheduled these 4 secrets for deletion before the Lambda
-      # stack was updated off its {{resolve:secretsmanager:...}} refs.
-      # CloudFormation needs to resolve those old refs to compute this
-      # update, which fails once a secret is pending deletion - restore
-      # them first so this update can succeed, then delete them for real.
-      - name: Restore secrets pending deletion
-        run: |
-          for id in brickwise/db-url brickwise/jwt-secret brickwise/rebrickable-api-key brickwise/r2-credentials; do
-            aws secretsmanager restore-secret --secret-id "$id" --region "$AWS_REGION" || true
-          done
-
       - name: Setup SAM CLI
         uses: aws-actions/setup-sam@v2
 
