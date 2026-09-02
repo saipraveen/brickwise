@@ -23,6 +23,30 @@ Parameters:
     Type: String
     Default: latest
     Description: Docker image tag to deploy
+  DatabaseUrl:
+    Type: String
+    NoEcho: true
+    Description: Neon PostgreSQL connection string (decrypted from infra/secrets/production.enc.yaml)
+  JwtSecret:
+    Type: String
+    NoEcho: true
+    Description: JWT signing secret (decrypted from infra/secrets/production.enc.yaml)
+  RebrickableApiKey:
+    Type: String
+    NoEcho: true
+    Description: Rebrickable API v3 key (decrypted from infra/secrets/production.enc.yaml)
+  R2AccessKeyId:
+    Type: String
+    NoEcho: true
+    Description: Cloudflare R2 access key ID (decrypted from infra/secrets/production.enc.yaml)
+  R2SecretAccessKey:
+    Type: String
+    NoEcho: true
+    Description: Cloudflare R2 secret access key (decrypted from infra/secrets/production.enc.yaml)
+  R2Endpoint:
+    Type: String
+    NoEcho: true
+    Description: Cloudflare R2 S3-compatible endpoint (decrypted from infra/secrets/production.enc.yaml)
 
 Resources:
   BrickwiseApiFunction:
@@ -35,12 +59,12 @@ Resources:
         Variables:
           PORT: "8080"
           NODE_ENV: !Ref Environment
-          DATABASE_URL: !Sub "{{resolve:secretsmanager:brickwise/db-url}}"
-          JWT_SECRET: !Sub "{{resolve:secretsmanager:brickwise/jwt-secret}}"
-          REBRICKABLE_API_KEY: !Sub "{{resolve:secretsmanager:brickwise/rebrickable-api-key}}"
-          R2_ACCESS_KEY_ID: !Sub "{{resolve:secretsmanager:brickwise/r2-credentials:SecretString:access_key_id}}"
-          R2_SECRET_ACCESS_KEY: !Sub "{{resolve:secretsmanager:brickwise/r2-credentials:SecretString:secret_access_key}}"
-          R2_ENDPOINT: !Sub "{{resolve:secretsmanager:brickwise/r2-credentials:SecretString:endpoint}}"
+          DATABASE_URL: !Ref DatabaseUrl
+          JWT_SECRET: !Ref JwtSecret
+          REBRICKABLE_API_KEY: !Ref RebrickableApiKey
+          R2_ACCESS_KEY_ID: !Ref R2AccessKeyId
+          R2_SECRET_ACCESS_KEY: !Ref R2SecretAccessKey
+          R2_ENDPOINT: !Ref R2Endpoint
           R2_BUCKET_NAME: "brickwise-scan-images"
       FunctionUrlConfig:
         AuthType: NONE
@@ -63,13 +87,6 @@ Resources:
                 - !Sub "arn:aws:bedrock:${AWS::Region}::foundation-model/anthropic.claude-3-sonnet-*"
                 - !Sub "arn:aws:bedrock:${AWS::Region}::foundation-model/anthropic.claude-3-5-haiku-*"
                 - !Sub "arn:aws:bedrock:${AWS::Region}::foundation-model/anthropic.claude-3-5-sonnet-*"
-        - Statement:
-            - Sid: SecretsManagerRead
-              Effect: Allow
-              Action:
-                - secretsmanager:GetSecretValue
-              Resource:
-                - !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:brickwise/*"
     Metadata:
       DockerContext: ../../server
       Dockerfile: Dockerfile

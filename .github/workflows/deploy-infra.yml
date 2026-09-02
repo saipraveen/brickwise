@@ -113,6 +113,24 @@ jobs:
         id: ecr-login
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Install sops
+        run: |
+          curl -sL -o /usr/local/bin/sops \
+            "https://github.com/getsops/sops/releases/download/v3.9.4/sops-v3.9.4.linux.amd64"
+          chmod +x /usr/local/bin/sops
+
+      - name: Decrypt secrets
+        env:
+          SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+        run: |
+          sops -d --output-type dotenv infra/secrets/production.enc.yaml > /tmp/secrets.env
+          while IFS='=' read -r key value; do
+            [ -z "$key" ] && continue
+            echo "::add-mask::$value"
+            echo "$key=$value" >> "$GITHUB_ENV"
+          done < /tmp/secrets.env
+          rm -f /tmp/secrets.env
+
       - name: SAM Deploy
         env:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
@@ -127,4 +145,10 @@ jobs:
             --image-repository $ECR_REGISTRY/brickwise-api \
             --parameter-overrides \
               EcrRepositoryUri=$ECR_REGISTRY/brickwise-api \
-              ImageTag=latest
+              ImageTag=latest \
+              DatabaseUrl="$DATABASE_URL" \
+              JwtSecret="$JWT_SECRET" \
+              RebrickableApiKey="$REBRICKABLE_API_KEY" \
+              R2AccessKeyId="$R2_ACCESS_KEY_ID" \
+              R2SecretAccessKey="$R2_SECRET_ACCESS_KEY" \
+              R2Endpoint="$R2_ENDPOINT"

@@ -2,8 +2,9 @@
 
 This project uses a hybrid **Terraform + AWS SAM** approach for infrastructure-as-code:
 
-- **Terraform** manages platform resources: ECR, Secrets Manager, Cloudflare R2, DNS, Pages, and Neon PostgreSQL
+- **Terraform** manages platform resources: ECR, Cloudflare R2, DNS, Pages, and Neon PostgreSQL
 - **AWS SAM** manages the Lambda function lifecycle (Docker image build/push, Function URL, IAM)
+- **SOPS + age** encrypts application secrets at rest in the repo (`infra/secrets/production.enc.yaml`), decrypted into Lambda env vars at deploy time - see [ADR-003](../docs/adr/003-sops-secrets-management.md)
 - **Terraform Cloud** stores state remotely (free tier)
 - **GitHub Actions** runs `terraform plan` on PRs and `terraform apply` on merge to main
 
@@ -14,6 +15,7 @@ See [ADR-001](../docs/adr/001-infrastructure-and-deployment.md) for the full dec
 - [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) (for Lambda deploys)
 - [AWS CLI](https://aws.amazon.com/cli/) configured with credentials (for SAM)
 - A [Terraform Cloud](https://app.terraform.io) account (free tier)
+- [SOPS](https://github.com/getsops/sops) and [age](https://github.com/FiloSottile/age) (only needed to read/edit secrets locally - see [Secrets Management](#secrets-management) below)
 
 Terraform itself is NOT required locally - all plans and applies run via GitHub Actions against Terraform Cloud.
 
@@ -104,6 +106,29 @@ terraform import cloudflare_r2_bucket.scan_images <account_id>/brickwise-scan-im
 terraform import cloudflare_pages_project.frontend <account_id>/brickwise
 ```
 
+## Secrets Management
+
+Application secrets (`DATABASE_URL`, `JWT_SECRET`, `REBRICKABLE_API_KEY`, R2 credentials)
+live SOPS-encrypted at `infra/secrets/production.enc.yaml`, decrypted straight into Lambda
+env vars during `sam deploy`. See [ADR-003](../docs/adr/003-sops-secrets-management.md).
+
+```bash
+# One-time: generate an age keypair (keep the private key OUT of git)
+age-keygen -o ~/.config/sops/age/keys.txt
+# Add the printed public key to .sops.yaml's `age:` recipient
+
+# Edit/rotate a secret (opens decrypted content in $EDITOR, re-encrypts on save)
+export SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt
+sops infra/secrets/production.enc.yaml
+
+# Read a single value without opening an editor
+sops -d --extract '["DATABASE_URL"]' infra/secrets/production.enc.yaml
+```
+
+The age **private** key also needs to be stored as the `SOPS_AGE_KEY` GitHub Actions
+secret so `deploy-infra.yml` and `deploy-server.yml` can decrypt in CI. Never commit a
+decrypted copy of the secrets file.
+
 ## SAM Setup
 
 ```bash
@@ -139,14 +164,16 @@ The initial setup is complete. All infrastructure is managed via CI/CD:
 infra/
 ├── terraform/
 │   ├── main.tf              # Provider config, Terraform Cloud backend
-│   ├── aws.tf               # ECR, Secrets Manager resources
+│   ├── aws.tf               # ECR resources
 │   ├── cloudflare.tf        # R2 bucket, DNS records, Pages project
 │   ├── neon.tf              # Neon PostgreSQL project, branch, role, database
 │   ├── variables.tf         # Input variables
 │   ├── outputs.tf           # Resource outputs
 │   └── terraform.tfvars.example  # Variable template (actual values in TF Cloud)
-└── sam/
-    └── template.yaml        # Lambda function, Function URL, IAM role
+├── sam/
+│   └── template.yaml        # Lambda function, Function URL, IAM role
+└── secrets/
+    └── production.enc.yaml  # SOPS-encrypted app secrets (safe to commit)
 ```
 
 ## Cost
@@ -154,7 +181,7 @@ infra/
 All infrastructure resources are within always-free tiers:
 - ECR: 500 MB storage free
 - Lambda: 1M requests/month free
-- Secrets Manager: ~$1.60/month for 4 secrets
+- Secrets: SOPS + age, free (see [ADR-003](../docs/adr/003-sops-secrets-management.md); replaced AWS Secrets Manager's ~$1.60/month)
 - Cloudflare R2: 10 GB free
 - Cloudflare Pages: Unlimited, free
 - Cloudflare DNS: Free

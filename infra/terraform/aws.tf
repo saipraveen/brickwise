@@ -45,42 +45,8 @@ resource "aws_ecr_lifecycle_policy" "api" {
   })
 }
 
-# Secrets Manager - Database URL
-resource "aws_secretsmanager_secret" "db_url" {
-  name        = "${var.project_name}/db-url"
-  description = "Neon PostgreSQL connection string"
-
-  tags = {
-    Project = var.project_name
-  }
-}
-
-# Secrets Manager - Rebrickable API Key
-resource "aws_secretsmanager_secret" "rebrickable_api_key" {
-  name        = "${var.project_name}/rebrickable-api-key"
-  description = "Rebrickable API v3 key"
-
-  tags = {
-    Project = var.project_name
-  }
-}
-
-# Secrets Manager - R2 Credentials
-resource "aws_secretsmanager_secret" "r2_credentials" {
-  name        = "${var.project_name}/r2-credentials"
-  description = "Cloudflare R2 S3-compatible access credentials"
-
-  tags = {
-    Project = var.project_name
-  }
-}
-
-# Secrets Manager - JWT Secret
-resource "aws_secretsmanager_secret" "jwt_secret" {
-  name        = "${var.project_name}/jwt-secret"
-  description = "JWT signing secret for authentication"
-
-  tags = {
-    Project = var.project_name
-  }
-}
+# Secrets (DB URL, JWT secret, Rebrickable key, R2 credentials) are no longer
+# managed here - AWS Secrets Manager cost ~$1.60/month for 4 secrets with no
+# free tier. They now live SOPS-encrypted at infra/secrets/production.enc.yaml
+# and are decrypted straight into Lambda env vars at deploy time.
+# See docs/adr/003-sops-secrets-management.md.

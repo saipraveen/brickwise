@@ -13,16 +13,6 @@ output "lambda_function_url" {
   value       = "Run 'sam deploy' first, then retrieve from SAM outputs"
 }
 
-output "secrets_arns" {
-  description = "ARNs of all Secrets Manager secrets"
-  value = {
-    db_url              = aws_secretsmanager_secret.db_url.arn
-    rebrickable_api_key = aws_secretsmanager_secret.rebrickable_api_key.arn
-    r2_credentials      = aws_secretsmanager_secret.r2_credentials.arn
-    jwt_secret          = aws_secretsmanager_secret.jwt_secret.arn
-  }
-}
-
 output "r2_bucket_name" {
   description = "Cloudflare R2 bucket name"
   value       = cloudflare_r2_bucket.scan_images.name

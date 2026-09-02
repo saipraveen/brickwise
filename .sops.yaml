@@ -1,0 +1,5 @@
+# SOPS configuration: which keys can decrypt which files.
+# Encrypted secrets replace AWS Secrets Manager (see docs/adr/003-sops-secrets-management.md).
+creation_rules:
+  - path_regex: infra/secrets/.*\.enc\.ya?ml$
+    age: age1u72rz7msetm7a7jd09hxlujdkhvlsgch2d89cr4dn4hx64e5qalq2q8p4m
