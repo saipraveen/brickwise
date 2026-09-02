@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-Our GHA workflows need AWS credentials to run Terraform (managing ECR, Secrets Manager, etc.). The two main options are:
+Our GHA workflows need AWS credentials to run Terraform (managing ECR, etc.). The two main options are:
 
 1. **Static IAM user keys** stored as GitHub secrets
 2. **OIDC federation** with short-lived credentials
@@ -23,7 +23,7 @@ A trust registration in our AWS account. It tells AWS: "I trust identity tokens 
 
 **IAM Role** (`arn:aws:iam::<ACCOUNT_ID>:role/github-actions-brickwise`)
 
-Has permissions (ECR, Secrets Manager) but isn't attached to any user or service account. Instead, it has a trust policy that says: "Anyone who presents a valid JWT from the GitHub OIDC provider, where the `sub` claim matches `repo:saipraveen/brickwise:*`, can assume me."
+Has permissions (ECR, Lambda) but isn't attached to any user or service account. Instead, it has a trust policy that says: "Anyone who presents a valid JWT from the GitHub OIDC provider, where the `sub` claim matches `repo:saipraveen/brickwise:*`, can assume me."
 
 ### Authentication Flow
 
@@ -108,6 +108,11 @@ The `sub` condition scopes access to our specific repo. A token from any other G
 The role currently has:
 - `AmazonEC2ContainerRegistryFullAccess` - manage ECR repos and images
 - `SecretsManagerReadWrite` - manage Secrets Manager secrets
+
+Since ADR-003 replaced AWS Secrets Manager with SOPS-encrypted secrets in the repo,
+workflows no longer call any Secrets Manager API. `SecretsManagerReadWrite` should be
+detached from this role manually (it was granted via AWS CLI, not Terraform - see
+Bootstrap Note below) once the SOPS-based deploy is confirmed working.
 
 ## Bootstrap Note
 

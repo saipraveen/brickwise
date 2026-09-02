@@ -29,6 +29,13 @@ Thumbs.db
 .aws/
 samconfig.toml
 
+# SOPS - never commit decrypted secrets or key material.
+# infra/secrets/*.enc.yaml IS meant to be committed (SOPS-encrypted).
+*.dec.yaml
+*.dec.yml
+sops-age-key.txt
+*.age.key
+
 # Terraform
 *.tfstate
 *.tfstate.backup

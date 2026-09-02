@@ -2,7 +2,8 @@
 # Builds Docker image, pushes to ECR, and updates Lambda function
 #
 # Required GitHub Secrets:
-#   AWS_ROLE_ARN - IAM OIDC role ARN for GitHub Actions
+#   AWS_ROLE_ARN   - IAM OIDC role ARN for GitHub Actions
+#   SOPS_AGE_KEY   - age private key used to decrypt infra/secrets/production.enc.yaml
 
 name: Deploy Server
 
@@ -104,6 +105,20 @@ jobs:
             --image-uri "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" \
             --region $AWS_REGION
 
+      - name: Install sops
+        run: |
+          curl -sL -o /usr/local/bin/sops \
+            "https://github.com/getsops/sops/releases/download/v3.9.4/sops-v3.9.4.linux.amd64"
+          chmod +x /usr/local/bin/sops
+
+      - name: Decrypt DATABASE_URL
+        env:
+          SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+        run: |
+          DATABASE_URL=$(sops -d --extract '["DATABASE_URL"]' infra/secrets/production.enc.yaml)
+          echo "::add-mask::$DATABASE_URL"
+          echo "DATABASE_URL=$DATABASE_URL" >> "$GITHUB_ENV"
+
       - name: Run database migrations
         run: |
           pnpm --filter server db:generate
@@ -122,12 +137,6 @@ jobs:
               --body "Auto-generated migration files from schema changes. Merge to apply migrations on next deploy."
             echo "::warning::Migration files generated and PR created. Merge the PR and re-run this workflow to apply migrations."
           else
-            DATABASE_URL=$(aws secretsmanager get-secret-value \
-              --secret-id brickwise/db-url \
-              --query 'SecretString' \
-              --output text \
-              --region $AWS_REGION)
-            export DATABASE_URL
             pnpm --filter server db:migrate
           fi
         env:
